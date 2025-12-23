@@ -1,12 +1,11 @@
 import { useState } from 'react'
-import FormVagas from '../../components/FormVagas'
+import styled from 'styled-components'
 
+import FormVagas from '../../components/FormVagas'
 import Vaga from '../../components/Vaga'
 
-import styles from './ListaVagas.module.css'
-
-type Vaga = {
-  id: string
+type VagaTipo = {
+  id: number
   titulo: string
   localizacao: string
   nivel: string
@@ -16,7 +15,18 @@ type Vaga = {
   requisitos: string[]
 }
 
-const vagas = [
+const Lista = styled.ul`
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 32px;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+`
+
+const vagas: VagaTipo[] = [
   {
     id: 1,
     titulo: 'Desenvolvedor front-end',
@@ -46,73 +56,33 @@ const vagas = [
     salarioMin: 4000,
     salarioMax: 6000,
     requisitos: ['HTML', 'CSS', 'JavaScript', 'jQuery']
-  },
-  {
-    id: 4,
-    titulo: 'Designer de interfaces',
-    localizacao: 'remoto',
-    nivel: 'junior',
-    modalidade: 'clt',
-    salarioMin: 4000,
-    salarioMax: 5000,
-    requisitos: ['HTML', 'CSS', 'JavaScript', 'jQuery']
-  },
-  {
-    id: 5,
-    titulo: 'Desenvolvedor front-end',
-    localizacao: 'remoto',
-    nivel: 'senior',
-    modalidade: 'clt',
-    salarioMin: 7000,
-    salarioMax: 8000,
-    requisitos: ['HTML', 'CSS', 'JavaScript', 'jQuery']
-  },
-  {
-    id: 6,
-    titulo: 'Desenvolvedor front-end para projeto internacional',
-    localizacao: 'remoto',
-    nivel: 'senior',
-    modalidade: 'pj',
-    salarioMin: 12000,
-    salarioMax: 15000,
-    requisitos: ['HTML', 'CSS', 'JavaScript', 'jQuery']
-  },
-  {
-    id: 7,
-    titulo: 'Desenvolvedor front-end',
-    localizacao: 'São Paulo/SP',
-    nivel: 'junior',
-    modalidade: 'clt',
-    salarioMin: 4000,
-    salarioMax: 5000,
-    requisitos: ['HTML', 'CSS', 'JavaScript', 'jQuery']
   }
 ]
 
 const ListaVagas = () => {
   const [filtro, setFiltro] = useState<string>('')
 
-  const vagasFiltradas = vagas.filter(
-    (x) => x.titulo.toLocaleLowerCase().search(filtro) >= 0
+  const vagasFiltradas = vagas.filter((vaga) =>
+    vaga.titulo.toLowerCase().includes(filtro)
   )
 
   return (
     <div>
-      <FormVagas aoPesquisar={(termo: string) => setFiltro(termo)} />
-      <ul className={styles.vagas}>
-        {vagasFiltradas.map((vag) => (
+      <FormVagas aoPesquisar={setFiltro} />
+      <Lista>
+        {vagasFiltradas.map((vaga) => (
           <Vaga
-            key={vag.id}
-            titulo={vag.titulo}
-            localizacao={vag.localizacao}
-            nivel={vag.nivel}
-            modalidade={vag.modalidade}
-            salarioMin={vag.salarioMin}
-            salarioMax={vag.salarioMax}
-            requisitos={vag.requisitos}
+            key={vaga.id}
+            titulo={vaga.titulo}
+            localizacao={vaga.localizacao}
+            nivel={vaga.nivel}
+            modalidade={vaga.modalidade}
+            salarioMin={vaga.salarioMin}
+            salarioMax={vaga.salarioMax}
+            requisitos={vaga.requisitos}
           />
         ))}
-      </ul>
+      </Lista>
     </div>
   )
 }
